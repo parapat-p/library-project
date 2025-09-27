@@ -1,1 +1,2 @@
 # library-project
+This project is from the odin-project to help learning about prototype ,object and practice more in depth about how to transfer data of input between html input and javascript with link to object to show related information of change based on user input
