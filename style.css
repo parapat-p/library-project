@@ -74,6 +74,10 @@ form > p {
     grid-template-columns: 1fr 2fr;
 }
 
+.library > button {
+    padding: 20px;
+}
+
 button {
     background-color: white;
 }

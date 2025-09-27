@@ -84,7 +84,8 @@ function createCard(bookObject:BookInstance){
     const ATTR_ORDER: (keyof BookInstance)[] = [
         "bookTitle",
         "bookAuthor",
-        "bookPage"
+        "bookPage",
+        "isRead"
     ];
     ATTR_ORDER.forEach((key) => {
         const p = document.createElement("p");
@@ -99,8 +100,8 @@ function createCard(bookObject:BookInstance){
             case "bookPage":
                 topic = "Total pages";
                 break;
-            case "uid":
-                topic = "Book ID";
+            case "isRead":
+                topic = "Already read?:";
                 break;
         }
         p.textContent = `${topic}: ${bookObject[key]}`;
@@ -160,6 +161,15 @@ BookInstanceConstructor.prototype.setCardDiv = function(this:BookInstance, card:
 
 BookInstanceConstructor.prototype.setIsRead = function(this:BookInstance, isRead:boolean) {
     this.isRead = isRead;
+    if(!this.card){
+        throw new TypeError("No card assigned");
+    }
+    const isReadText = (this.card).querySelector("p:nth-child(4)");
+    if(isReadText){
+        isReadText.textContent = `Already read?: ${isRead}`;
+    }
+    
+    
 }
 
 // Declare function prototype End
