@@ -15,6 +15,7 @@ const dialog = document.getElementById("dialog") as HTMLDialogElement || null;
 const addButton = document.getElementById("show-dialog");
 const closeButton = dialog?.querySelector("#novalidate-close");
 const container = document.querySelector(".container");
+const form = document.querySelector("form");
 // const declaration END
 
 // Function declaration START
@@ -38,7 +39,7 @@ function addBookToLibrary(){
 function activateDialogEvent() {
     // if (!addButton || !dialog || !closeButton) {
     if (!addButton || !dialog ){
-        throw new TypeError("Not found");
+        throw new TypeError("Not found activateDialogEvent");
     }
 
     addButton.addEventListener("click", () => {
@@ -48,7 +49,19 @@ function activateDialogEvent() {
     closeButton?.addEventListener("click",submitCloseButton)
     function submitCloseButton(event:Event){
         event.preventDefault();
+        dialog.close();
     }
+}
+
+function activateForm(){
+    if(!form){
+        throw new TypeError("Not found activateForm");
+    }
+    form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const dataForm = new FormData(form);
+    console.log(dataForm.get("bookPage"));
+    });
 }
 
 function createCard(bookObject:BookInstance){
@@ -97,6 +110,6 @@ function createCard(bookObject:BookInstance){
 // Function declaration END
 
 // Initialize function event Start
-
+activateForm()
 activateDialogEvent();
 // Initialize function event END

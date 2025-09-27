@@ -13,15 +13,15 @@
             <form>
                 <p id="inputBookTitle">
                     Book Title :
-                    <input type="text" placeholder="The journey of heros vol.1" required/>
+                    <input type="text" placeholder="The journey of heros vol.1" required name="bookPage"/>
                 </p>
                 <p id="inputBookAuthor">
                     Book Author :
-                    <input type="text" placeholder="Rachel Teio" required />
+                    <input type="text" placeholder="Rachel Teio" required name="bookAuthor"/>
                 </p>
                 <p id="inputBookPage">
                     Number of Pages :
-                    <input type="number" placeholder="45" required />
+                    <input type="number" placeholder="45" required name="bookPage"/>
                 </p>
                 <input type="submit" id="close-dialog" value="Submit" />
                 <input type="submit" id="novalidate-close" value="Cancle" formnovalidate />
@@ -30,10 +30,10 @@
         <button id="show-dialog">Add new Book</button>
         <div class="container">
             <div class="card">
-                <div class="bookTitle">Book name : </div>
-                <div class="bookAuthor">Author : </div>
-                <div class="bookId">ID : </div>
-                <div class="bookPage">Total page : </div>
+                <p>Book name : </p>
+                <p>Author : </p>
+                <p>ID : </p>
+                <p>Total page : </p>
             </div>
         </div>
     </div>

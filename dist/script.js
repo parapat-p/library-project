@@ -6,6 +6,7 @@ var dialog = document.getElementById("dialog") || null;
 var addButton = document.getElementById("show-dialog");
 var closeButton = dialog === null || dialog === void 0 ? void 0 : dialog.querySelector("#novalidate-close");
 var container = document.querySelector(".container");
+var form = document.querySelector("form");
 // const declaration END
 // Function declaration START
 function BookInstanceConstructor(bookName, author, page, isRead, id) {
@@ -24,7 +25,7 @@ function addBookToLibrary() {
 function activateDialogEvent() {
     // if (!addButton || !dialog || !closeButton) {
     if (!addButton || !dialog) {
-        throw new TypeError("Not found");
+        throw new TypeError("Not found activateDialogEvent");
     }
     addButton.addEventListener("click", function () {
         dialog.showModal();
@@ -32,7 +33,18 @@ function activateDialogEvent() {
     closeButton === null || closeButton === void 0 ? void 0 : closeButton.addEventListener("click", submitCloseButton);
     function submitCloseButton(event) {
         event.preventDefault();
+        dialog.close();
     }
+}
+function activateForm() {
+    if (!form) {
+        throw new TypeError("Not found activateForm");
+    }
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var dataForm = new FormData(form);
+        console.log(dataForm.get("bookPage"));
+    });
 }
 function createCard(bookObject) {
     var card = document.createElement("div");
@@ -74,5 +86,6 @@ function createCard(bookObject) {
 }
 // Function declaration END
 // Initialize function event Start
+activateForm();
 activateDialogEvent();
 // Initialize function event END

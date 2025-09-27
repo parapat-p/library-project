@@ -36,6 +36,7 @@ h3 {
 .card{
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     color: black;
     margin: 10px;
     padding: 20px;
@@ -57,6 +58,8 @@ form {
     grid-template-rows:1fr 1fr ;
 }
 
-p {
+p { 
+    font-size: 32px;
+    flex: 1;
     display: flex;
 }
