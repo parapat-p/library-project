@@ -9,11 +9,21 @@
 <body>
     <h3>My Library</h3>
     <div class="library">
-        <dialog>
-        <button autofocus>Close</button>
-        <p>This modal dialog has a groovy backdrop!</p>
+        <dialog id="dialog">
+            <form>
+                <p id="inputBookTitle">
+                    Book Title :
+                    <input type="text" placeholder="The journey of heros vol.1" required/>
+                </p>
+                <p id="inputBookAuthor">
+                    Book Author :
+                    <input type="text" placeholder="Rachel Teio" required />
+                </p>
+                <input type="submit" id="close-dialog" value="Submit" />
+                <input type="submit" id="novalidate-close" value="Cancle" formnovalidate />
+            </form>
         </dialog>
-        <button>Add new Book</button>
+        <button id="show-dialog">Add new Book</button>
         <div class="container">
             <div class="card">
                 <div class="bookTitle">Book name : </div>

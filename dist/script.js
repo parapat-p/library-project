@@ -1,9 +1,8 @@
 "use strict";
 // const declaration START
 var myLibrary = [];
-var dialog = document.querySelector("dialog");
-var addButton = document.querySelector("dialog + button");
-var closeButton = document.querySelector("dialog button");
+var dialog = document.getElementById("dialog") || null;
+var addButton = document.getElementById("show-dialog");
 // Type declaration END
 // Function declaration START
 function Book(bookName, author) {
@@ -18,15 +17,16 @@ function Book(bookName, author) {
 function addBookToLibrary() {
 }
 function activateDialogEvent() {
-    if ((addButton === null) || (dialog === null) || (closeButton === null)) {
-        throw new TypeError("Please check if dialog modal is correctly decalre in DOM");
+    // if (!addButton || !dialog || !closeButton) {
+    if (!addButton || !dialog) {
+        throw new TypeError("Not found");
     }
     addButton.addEventListener("click", function () {
         dialog.showModal();
     });
-    closeButton.addEventListener("click", function () {
-        dialog.close();
-    });
+    // closeButton.addEventListener("click", () => {
+    //     dialog.close();
+    // });
 }
 // Function declaration END
 activateDialogEvent();
