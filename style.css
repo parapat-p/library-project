@@ -56,10 +56,32 @@ form {
     gap: 10px;
     padding: 10px;
     grid-template-rows:1fr 1fr ;
+    grid-template-columns: 1;
 }
 
-p { 
-    font-size: 32px;
+.card > p { 
+    font-size: 24px;
     flex: 1;
     display: flex;
+}
+
+.card > button {
+    padding: 20px;
+}
+
+form > p {
+    display: inline-grid;
+    grid-template-columns: 1fr 2fr;
+}
+
+button {
+    background-color: white;
+}
+
+.activateRead{
+    background-color: rgb(168, 240, 168);
+}
+
+.deactivateRead{
+    background-color: white;
 }

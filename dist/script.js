@@ -9,7 +9,7 @@ var container = document.querySelector(".container");
 var form = document.querySelector("form");
 // const declaration END
 // Function declaration START
-function BookInstanceConstructor(bookName, author, page, isRead, id) {
+function BookInstanceConstructor(bookName, author, page, id) {
     var _newTarget = this && this instanceof BookInstanceConstructor ? this.constructor : void 0;
     if (!_newTarget) {
         throw new TypeError("Please use constructor new to create an Object!");
@@ -18,9 +18,11 @@ function BookInstanceConstructor(bookName, author, page, isRead, id) {
     this.bookTitle = bookName;
     this.bookAuthor = author;
     this.bookPage = page;
-    this.isRead = isRead;
+    this.isRead = false;
 }
-function addBookToLibrary() {
+function addBookToLibrary(book) {
+    createCard(book);
+    myLibrary.push(book);
 }
 function activateDialogEvent() {
     // if (!addButton || !dialog || !closeButton) {
@@ -43,7 +45,11 @@ function activateForm() {
     form.addEventListener('submit', function (e) {
         e.preventDefault();
         var dataForm = new FormData(form);
-        console.log(dataForm.get("bookPage"));
+        var id = crypto.randomUUID();
+        var newBook = new BookInstanceConstructor(dataForm.get("bookTitle"), dataForm.get("bookAuthor"), dataForm.get("bookPage"), id);
+        addBookToLibrary(newBook);
+        form.reset();
+        dialog.close();
     });
 }
 function createCard(bookObject) {
@@ -53,7 +59,6 @@ function createCard(bookObject) {
         "bookTitle",
         "bookAuthor",
         "bookPage",
-        "isRead",
         "uid"
     ];
     ATTR_ORDER.forEach(function (key) {
@@ -69,9 +74,6 @@ function createCard(bookObject) {
             case "bookPage":
                 topic = "Total pages";
                 break;
-            case "isRead":
-                topic = "Already read";
-                break;
             case "uid":
                 topic = "Book ID";
                 break;
@@ -79,11 +81,36 @@ function createCard(bookObject) {
         p.textContent = "".concat(topic, ": ").concat(bookObject[key]);
         card.appendChild(p);
     });
+    var isReadButton = document.createElement("button");
+    isReadButton.textContent = "Try read me!";
+    isReadButton.addEventListener("click", function () {
+        bookObject.setIsRead(!bookObject.isRead);
+        switch (bookObject.isRead) {
+            case true:
+                isReadButton.className = "activateRead";
+                isReadButton.textContent = "You already read this!";
+                break;
+            case false:
+                isReadButton.className = "dectivateRead";
+                isReadButton.textContent = "Try read me!";
+                break;
+        }
+    });
+    card.appendChild(isReadButton);
     if (container) {
         console.log("Add card!");
         container.appendChild(card);
     }
+    bookObject.setCardDiv(card);
 }
+// Declare function prototype Start
+BookInstanceConstructor.prototype.setCardDiv = function (card) {
+    this.card = card;
+};
+BookInstanceConstructor.prototype.setIsRead = function (isRead) {
+    this.isRead = isRead;
+};
+// Declare function prototype End
 // Function declaration END
 // Initialize function event Start
 activateForm();
