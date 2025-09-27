@@ -2,7 +2,7 @@
 const myLibrary:BookInstance[] = [];
 const dialog = document.getElementById("dialog") as HTMLDialogElement || null;
 const addButton = document.getElementById("show-dialog");
-// const closeButton = dialog?.querySelector("#close-dialog");
+const closeButton = dialog?.querySelector("#novalidate-close");
 
 // const declaration END
 
@@ -42,9 +42,10 @@ function activateDialogEvent() {
         dialog.showModal();
     });
 
-    // closeButton.addEventListener("click", () => {
-    //     dialog.close();
-    // });
+    closeButton?.addEventListener("click",submitCloseButton)
+    function submitCloseButton(event:Event){
+        event.preventDefault();
+    }
 }
 
 
