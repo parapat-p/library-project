@@ -1,7 +1,7 @@
 "use strict";
 // Type declaration END
 // const declaration START
-var myLibrary = [];
+var myLibrary;
 var dialog = document.getElementById("dialog") || null;
 var addButton = document.getElementById("show-dialog");
 var closeButton = dialog === null || dialog === void 0 ? void 0 : dialog.querySelector("#novalidate-close");
@@ -20,10 +20,11 @@ function BookInstanceConstructor(bookName, author, page, id) {
     this.bookPage = page;
     this.isRead = false;
 }
-function addBookToLibrary(book) {
-    createCard(book);
-    myLibrary.push(book);
+function addBookToLibrary(bookObject) {
+    createCard(bookObject);
+    myLibrary[bookObject.uid] = bookObject;
 }
+;
 function activateDialogEvent() {
     // if (!addButton || !dialog || !closeButton) {
     if (!addButton || !dialog) {
@@ -81,6 +82,15 @@ function createCard(bookObject) {
         p.textContent = "".concat(topic, ": ").concat(bookObject[key]);
         card.appendChild(p);
     });
+    card.appendChild(createIsReadButton(bookObject));
+    card.appendChild(createRemoveCardButton(bookObject));
+    if (container) {
+        console.log("Add card!");
+        container.appendChild(card);
+    }
+    bookObject.setCardDiv(card);
+}
+function createIsReadButton(bookObject) {
     var isReadButton = document.createElement("button");
     isReadButton.textContent = "Try read me!";
     isReadButton.addEventListener("click", function () {
@@ -96,12 +106,22 @@ function createCard(bookObject) {
                 break;
         }
     });
-    card.appendChild(isReadButton);
-    if (container) {
-        console.log("Add card!");
-        container.appendChild(card);
+    return isReadButton;
+}
+function createRemoveCardButton(bookObject) {
+    var removeCardButton = document.createElement("button");
+    removeCardButton.className = "removeCard";
+    removeCardButton.textContent = "Remove Book";
+    removeCardButton.addEventListener("click", function () {
+        return removeBook(bookObject);
+    });
+    return removeCardButton;
+}
+function removeBook(bookObject) {
+    if (container && bookObject.card) {
+        container.removeChild(bookObject.card);
+        delete myLibrary[bookObject.uid];
     }
-    bookObject.setCardDiv(card);
 }
 // Declare function prototype Start
 BookInstanceConstructor.prototype.setCardDiv = function (card) {

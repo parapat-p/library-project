@@ -9,11 +9,13 @@ type BookInstance = {
     setCardDiv: (card: HTMLDivElement) => void;
     setIsRead: (isRead:boolean) => void;
 };
+
+type BookRecord = Record<string,BookInstance>
 // Type declaration END
 
 
 // const declaration START
-const myLibrary:BookInstance[] = [];
+let myLibrary:BookRecord;
 const dialog = document.getElementById("dialog") as HTMLDialogElement || null;
 const addButton = document.getElementById("show-dialog");
 const closeButton = dialog?.querySelector("#novalidate-close");
@@ -24,7 +26,7 @@ const form = document.querySelector("form");
 // Function declaration START
 
 function BookInstanceConstructor(this: BookInstance,bookName:string,author:string,page:number,id:string){
-    if(!new.target){
+    if(!new.target){ 
         throw new TypeError("Please use constructor new to create an Object!");
     }
     this.uid = id;
@@ -34,10 +36,10 @@ function BookInstanceConstructor(this: BookInstance,bookName:string,author:strin
     this.isRead = false;
 }
 
-function addBookToLibrary(book:BookInstance){
-    createCard(book);
-    myLibrary.push(book);
-}
+function addBookToLibrary(bookObject:BookInstance){
+    createCard(bookObject);
+    myLibrary[bookObject.uid]=bookObject;
+};
 
 function activateDialogEvent() {
     // if (!addButton || !dialog || !closeButton) {
@@ -105,6 +107,18 @@ function createCard(bookObject:BookInstance){
         p.textContent = `${topic}: ${bookObject[key]}`;
         card.appendChild(p);
     });
+
+    card.appendChild(createIsReadButton(bookObject));
+    card.appendChild(createRemoveCardButton(bookObject));
+    if(container){
+        console.log("Add card!")
+        container.appendChild(card);
+    }
+    bookObject.setCardDiv(card);
+
+}
+
+function createIsReadButton(bookObject:BookInstance):HTMLButtonElement{
     const isReadButton = document.createElement("button");
     isReadButton.textContent = "Try read me!"
     isReadButton.addEventListener("click",() => {
@@ -120,16 +134,25 @@ function createCard(bookObject:BookInstance){
                 break;
         }
     })
-
-    card.appendChild(isReadButton);
-    if(container){
-        console.log("Add card!")
-        container.appendChild(card);
-    }
-    bookObject.setCardDiv(card);
-
+    return isReadButton
 }
 
+function createRemoveCardButton(bookObject:BookInstance):HTMLButtonElement{
+    const removeCardButton = document.createElement("button");
+    removeCardButton.className = "removeCard";
+    removeCardButton.textContent = "Remove Book";
+    removeCardButton.addEventListener("click",() =>
+        removeBook(bookObject)
+    )
+    return removeCardButton;
+}
+
+function removeBook(bookObject:BookInstance){
+    if(container && bookObject.card){
+        container.removeChild(bookObject.card);
+        delete myLibrary[bookObject.uid];
+    }
+}
 
 // Declare function prototype Start
 
