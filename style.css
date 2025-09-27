@@ -28,7 +28,7 @@ h3 {
     height: 80%;
     display: grid;
     background-color: gray;
-    grid-template-columns: repeat(4,1fr);
+    grid-template-columns: repeat(auto-fit,minmax(500px,1fr));
     grid-template-rows: repeat(4,1fr);
     border: 1px solid white;
 }
@@ -58,6 +58,5 @@ form {
 }
 
 p {
-    display: inline-grid;
-    grid-template-columns: 1fr 2fr;
+    display: flex;
 }
