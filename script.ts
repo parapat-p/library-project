@@ -10,12 +10,12 @@ type BookInstance = {
     setIsRead: (isRead:boolean) => void;
 };
 
-type BookRecord = Record<string,BookInstance>
+
 // Type declaration END
 
 
 // const declaration START
-let myLibrary:BookRecord;
+let myLibrary = new Map<string,BookInstance>();
 const dialog = document.getElementById("dialog") as HTMLDialogElement || null;
 const addButton = document.getElementById("show-dialog");
 const closeButton = dialog?.querySelector("#novalidate-close");
@@ -38,7 +38,7 @@ function BookInstanceConstructor(this: BookInstance,bookName:string,author:strin
 
 function addBookToLibrary(bookObject:BookInstance){
     createCard(bookObject);
-    myLibrary[bookObject.uid]=bookObject;
+    myLibrary.set(bookObject.uid,bookObject);
 };
 
 function activateDialogEvent() {
@@ -84,8 +84,7 @@ function createCard(bookObject:BookInstance){
     const ATTR_ORDER: (keyof BookInstance)[] = [
         "bookTitle",
         "bookAuthor",
-        "bookPage",
-        "uid"
+        "bookPage"
     ];
     ATTR_ORDER.forEach((key) => {
         const p = document.createElement("p");
@@ -107,14 +106,13 @@ function createCard(bookObject:BookInstance){
         p.textContent = `${topic}: ${bookObject[key]}`;
         card.appendChild(p);
     });
-
+    bookObject.setCardDiv(card);
     card.appendChild(createIsReadButton(bookObject));
     card.appendChild(createRemoveCardButton(bookObject));
     if(container){
-        console.log("Add card!")
         container.appendChild(card);
     }
-    bookObject.setCardDiv(card);
+
 
 }
 
@@ -150,7 +148,7 @@ function createRemoveCardButton(bookObject:BookInstance):HTMLButtonElement{
 function removeBook(bookObject:BookInstance){
     if(container && bookObject.card){
         container.removeChild(bookObject.card);
-        delete myLibrary[bookObject.uid];
+        myLibrary.delete(bookObject.uid);
     }
 }
 

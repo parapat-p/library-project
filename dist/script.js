@@ -1,17 +1,16 @@
 "use strict";
 // Type declaration END
 // const declaration START
-var myLibrary;
-var dialog = document.getElementById("dialog") || null;
-var addButton = document.getElementById("show-dialog");
-var closeButton = dialog === null || dialog === void 0 ? void 0 : dialog.querySelector("#novalidate-close");
-var container = document.querySelector(".container");
-var form = document.querySelector("form");
+let myLibrary = new Map();
+const dialog = document.getElementById("dialog") || null;
+const addButton = document.getElementById("show-dialog");
+const closeButton = dialog?.querySelector("#novalidate-close");
+const container = document.querySelector(".container");
+const form = document.querySelector("form");
 // const declaration END
 // Function declaration START
 function BookInstanceConstructor(bookName, author, page, id) {
-    var _newTarget = this && this instanceof BookInstanceConstructor ? this.constructor : void 0;
-    if (!_newTarget) {
+    if (!new.target) {
         throw new TypeError("Please use constructor new to create an Object!");
     }
     this.uid = id;
@@ -22,7 +21,7 @@ function BookInstanceConstructor(bookName, author, page, id) {
 }
 function addBookToLibrary(bookObject) {
     createCard(bookObject);
-    myLibrary[bookObject.uid] = bookObject;
+    myLibrary.set(bookObject.uid, bookObject);
 }
 ;
 function activateDialogEvent() {
@@ -30,10 +29,10 @@ function activateDialogEvent() {
     if (!addButton || !dialog) {
         throw new TypeError("Not found activateDialogEvent");
     }
-    addButton.addEventListener("click", function () {
+    addButton.addEventListener("click", () => {
         dialog.showModal();
     });
-    closeButton === null || closeButton === void 0 ? void 0 : closeButton.addEventListener("click", submitCloseButton);
+    closeButton?.addEventListener("click", submitCloseButton);
     function submitCloseButton(event) {
         event.preventDefault();
         dialog.close();
@@ -43,28 +42,27 @@ function activateForm() {
     if (!form) {
         throw new TypeError("Not found activateForm");
     }
-    form.addEventListener('submit', function (e) {
+    form.addEventListener('submit', (e) => {
         e.preventDefault();
-        var dataForm = new FormData(form);
-        var id = crypto.randomUUID();
-        var newBook = new BookInstanceConstructor(dataForm.get("bookTitle"), dataForm.get("bookAuthor"), dataForm.get("bookPage"), id);
+        const dataForm = new FormData(form);
+        let id = crypto.randomUUID();
+        let newBook = new BookInstanceConstructor(dataForm.get("bookTitle"), dataForm.get("bookAuthor"), dataForm.get("bookPage"), id);
         addBookToLibrary(newBook);
         form.reset();
         dialog.close();
     });
 }
 function createCard(bookObject) {
-    var card = document.createElement("div");
+    const card = document.createElement("div");
     card.className = "card";
-    var ATTR_ORDER = [
+    const ATTR_ORDER = [
         "bookTitle",
         "bookAuthor",
-        "bookPage",
-        "uid"
+        "bookPage"
     ];
-    ATTR_ORDER.forEach(function (key) {
-        var p = document.createElement("p");
-        var topic = "";
+    ATTR_ORDER.forEach((key) => {
+        const p = document.createElement("p");
+        let topic = "";
         switch (key) {
             case "bookTitle":
                 topic = "Book Title";
@@ -79,21 +77,20 @@ function createCard(bookObject) {
                 topic = "Book ID";
                 break;
         }
-        p.textContent = "".concat(topic, ": ").concat(bookObject[key]);
+        p.textContent = `${topic}: ${bookObject[key]}`;
         card.appendChild(p);
     });
+    bookObject.setCardDiv(card);
     card.appendChild(createIsReadButton(bookObject));
     card.appendChild(createRemoveCardButton(bookObject));
     if (container) {
-        console.log("Add card!");
         container.appendChild(card);
     }
-    bookObject.setCardDiv(card);
 }
 function createIsReadButton(bookObject) {
-    var isReadButton = document.createElement("button");
+    const isReadButton = document.createElement("button");
     isReadButton.textContent = "Try read me!";
-    isReadButton.addEventListener("click", function () {
+    isReadButton.addEventListener("click", () => {
         bookObject.setIsRead(!bookObject.isRead);
         switch (bookObject.isRead) {
             case true:
@@ -109,18 +106,16 @@ function createIsReadButton(bookObject) {
     return isReadButton;
 }
 function createRemoveCardButton(bookObject) {
-    var removeCardButton = document.createElement("button");
+    const removeCardButton = document.createElement("button");
     removeCardButton.className = "removeCard";
     removeCardButton.textContent = "Remove Book";
-    removeCardButton.addEventListener("click", function () {
-        return removeBook(bookObject);
-    });
+    removeCardButton.addEventListener("click", () => removeBook(bookObject));
     return removeCardButton;
 }
 function removeBook(bookObject) {
     if (container && bookObject.card) {
         container.removeChild(bookObject.card);
-        delete myLibrary[bookObject.uid];
+        myLibrary.delete(bookObject.uid);
     }
 }
 // Declare function prototype Start
