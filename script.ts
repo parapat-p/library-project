@@ -1,21 +1,13 @@
 // Type declaration START
-type BookInstance = {
-    uid: string;
-    bookTitle: string;
-    bookAuthor: string;
-    bookPage:number;
-    isRead:boolean;
-    card?:HTMLDivElement;
-    setCardDiv: (card: HTMLDivElement) => void;
-    setIsRead: (isRead:boolean) => void;
-};
+
+
 
 
 // Type declaration END
 
 
 // const declaration START
-let myLibrary = new Map<string,BookInstance>();
+let myLibrary = new Map<string,BookInstanceConstructor>();
 const dialog = document.getElementById("dialog") as HTMLDialogElement || null;
 const addButton = document.getElementById("show-dialog");
 const closeButton = dialog?.querySelector("#novalidate-close");
@@ -25,18 +17,42 @@ const form = document.querySelector("form");
 
 // Function declaration START
 
-function BookInstanceConstructor(this: BookInstance,bookName:string,author:string,page:number,id:string){
-    if(!new.target){ 
-        throw new TypeError("Please use constructor new to create an Object!");
+
+
+class BookInstanceConstructor {
+    uid: string;
+    bookTitle: string;
+    bookAuthor: string;
+    bookPage: number;
+    isRead: boolean;
+    card:any;
+
+
+    constructor(bookName: string, author: string, page: number, id: string) {
+        this.uid = id;
+        this.bookTitle = bookName;
+        this.bookAuthor = author;
+        this.bookPage = page;
+        this.isRead = false;
     }
-    this.uid = id;
-    this.bookTitle = bookName;
-    this.bookAuthor = author;
-    this.bookPage = page;
-    this.isRead = false;
+
+    set setCardDiv(card:HTMLDivElement){
+        this.card = card;
+    }
+
+    set setIsRead(isRead:boolean){
+        if(!this.card){
+            throw new TypeError("No card assigned");
+        }
+        const isReadText = (this.card).querySelector("p:nth-child(4)");
+        if(isReadText){
+            isReadText.textContent = `Already read?: ${isRead}`;
+    }
+    }
 }
 
-function addBookToLibrary(bookObject:BookInstance){
+
+function addBookToLibrary(bookObject:BookInstanceConstructor){
     createCard(bookObject);
     myLibrary.set(bookObject.uid,bookObject);
 };
@@ -77,11 +93,11 @@ function activateForm(){
     });
 }
 
-function createCard(bookObject:BookInstance){
+function createCard(bookObject:BookInstanceConstructor){
     const card = document.createElement("div");
     card.className = "card";
 
-    const ATTR_ORDER: (keyof BookInstance)[] = [
+    const ATTR_ORDER: (keyof BookInstanceConstructor)[] = [
         "bookTitle",
         "bookAuthor",
         "bookPage",
@@ -107,7 +123,7 @@ function createCard(bookObject:BookInstance){
         p.textContent = `${topic}: ${bookObject[key]}`;
         card.appendChild(p);
     });
-    bookObject.setCardDiv(card);
+    bookObject.setCardDiv = card;
     card.appendChild(createIsReadButton(bookObject));
     card.appendChild(createRemoveCardButton(bookObject));
     if(container){
@@ -117,11 +133,11 @@ function createCard(bookObject:BookInstance){
 
 }
 
-function createIsReadButton(bookObject:BookInstance):HTMLButtonElement{
+function createIsReadButton(bookObject:BookInstanceConstructor):HTMLButtonElement{
     const isReadButton = document.createElement("button");
     isReadButton.textContent = "Try read me!"
     isReadButton.addEventListener("click",() => {
-        bookObject.setIsRead(!bookObject.isRead);
+        bookObject.setIsRead = !bookObject.isRead;
         switch(bookObject.isRead){
             case true:
                 isReadButton.className = "activateRead";
@@ -136,7 +152,7 @@ function createIsReadButton(bookObject:BookInstance):HTMLButtonElement{
     return isReadButton
 }
 
-function createRemoveCardButton(bookObject:BookInstance):HTMLButtonElement{
+function createRemoveCardButton(bookObject:BookInstanceConstructor):HTMLButtonElement{
     const removeCardButton = document.createElement("button");
     removeCardButton.className = "removeCard";
     removeCardButton.textContent = "Remove Book";
@@ -146,7 +162,7 @@ function createRemoveCardButton(bookObject:BookInstance):HTMLButtonElement{
     return removeCardButton;
 }
 
-function removeBook(bookObject:BookInstance){
+function removeBook(bookObject:BookInstanceConstructor){
     if(container && bookObject.card){
         container.removeChild(bookObject.card);
         myLibrary.delete(bookObject.uid);
@@ -155,22 +171,6 @@ function removeBook(bookObject:BookInstance){
 
 // Declare function prototype Start
 
-BookInstanceConstructor.prototype.setCardDiv = function(this:BookInstance, card:HTMLDivElement) {
-    this.card = card;
-}
-
-BookInstanceConstructor.prototype.setIsRead = function(this:BookInstance, isRead:boolean) {
-    this.isRead = isRead;
-    if(!this.card){
-        throw new TypeError("No card assigned");
-    }
-    const isReadText = (this.card).querySelector("p:nth-child(4)");
-    if(isReadText){
-        isReadText.textContent = `Already read?: ${isRead}`;
-    }
-    
-    
-}
 
 // Declare function prototype End
 

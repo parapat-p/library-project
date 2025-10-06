@@ -1,4 +1,5 @@
 "use strict";
+// Type declaration START
 // Type declaration END
 // const declaration START
 let myLibrary = new Map();
@@ -9,15 +10,26 @@ const container = document.querySelector(".container");
 const form = document.querySelector("form");
 // const declaration END
 // Function declaration START
-function BookInstanceConstructor(bookName, author, page, id) {
-    if (!new.target) {
-        throw new TypeError("Please use constructor new to create an Object!");
+class BookInstanceConstructor {
+    constructor(bookName, author, page, id) {
+        this.uid = id;
+        this.bookTitle = bookName;
+        this.bookAuthor = author;
+        this.bookPage = page;
+        this.isRead = false;
     }
-    this.uid = id;
-    this.bookTitle = bookName;
-    this.bookAuthor = author;
-    this.bookPage = page;
-    this.isRead = false;
+    set setCardDiv(card) {
+        this.card = card;
+    }
+    set setIsRead(isRead) {
+        if (!this.card) {
+            throw new TypeError("No card assigned");
+        }
+        const isReadText = (this.card).querySelector("p:nth-child(4)");
+        if (isReadText) {
+            isReadText.textContent = `Already read?: ${isRead}`;
+        }
+    }
 }
 function addBookToLibrary(bookObject) {
     createCard(bookObject);
@@ -81,7 +93,7 @@ function createCard(bookObject) {
         p.textContent = `${topic}: ${bookObject[key]}`;
         card.appendChild(p);
     });
-    bookObject.setCardDiv(card);
+    bookObject.setCardDiv = card;
     card.appendChild(createIsReadButton(bookObject));
     card.appendChild(createRemoveCardButton(bookObject));
     if (container) {
@@ -92,7 +104,7 @@ function createIsReadButton(bookObject) {
     const isReadButton = document.createElement("button");
     isReadButton.textContent = "Try read me!";
     isReadButton.addEventListener("click", () => {
-        bookObject.setIsRead(!bookObject.isRead);
+        bookObject.setIsRead = !bookObject.isRead;
         switch (bookObject.isRead) {
             case true:
                 isReadButton.className = "activateRead";
@@ -120,19 +132,6 @@ function removeBook(bookObject) {
     }
 }
 // Declare function prototype Start
-BookInstanceConstructor.prototype.setCardDiv = function (card) {
-    this.card = card;
-};
-BookInstanceConstructor.prototype.setIsRead = function (isRead) {
-    this.isRead = isRead;
-    if (!this.card) {
-        throw new TypeError("No card assigned");
-    }
-    const isReadText = (this.card).querySelector("p:nth-child(4)");
-    if (isReadText) {
-        isReadText.textContent = `Already read?: ${isRead}`;
-    }
-};
 // Declare function prototype End
 // Function declaration END
 // Initialize function event Start
